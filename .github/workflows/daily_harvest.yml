@@ -1,0 +1,28 @@
+name: Daily Scout 🚜
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # يعمل يومياً الساعة 9 صباحاً بتوقيت بغداد
+  workflow_dispatch:      # زر للتشغيل اليدوي للتجربة
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Run Scraper
+        env: 
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scraper.py
